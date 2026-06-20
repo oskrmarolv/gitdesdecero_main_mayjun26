@@ -1,0 +1,4 @@
+# config
+
+[ prod::server-001 ]
+56.78.129.01 ubuntu bash deploy.sh
