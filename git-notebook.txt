@@ -2,6 +2,34 @@
 GUÍA DE CONCEPTOS CLAVE DE GIT
 ================================================================================
 
+commit 2 desde feature/TICKET-003
+
+--------------------------------------------------------------------------------
+0.  LOS 4 ESPACIOS DE TRABAJO EN GIT (WORKSPACES)
+--------------------------------------------------------------------------------
+
+* **Working Directory (Directorio de Trabajo):** Es tu carpeta actual en la computadora. Aquí creas, editas o eliminas archivos. Git ve estos cambios pero aún no los está rastreando oficialmente.
+* **Staging Area (Área de Preparación / Index):** Es una sala de espera. Aquí "subes" los archivos específicos que quieres incluir en tu próximo guardado.
+* **Local Repository (Repositorio Local):** Es el historial permanente de tu proyecto en tu computadora. Cuando haces un "commit", los archivos del Staging Area se guardan aquí con una etiqueta de tiempo y autor.
+* **Remote Repository (Repositorio Remoto):** Es un servidor externo donde compartes tu historial local con otros desarrolladores y mantienes un respaldo en la nube.
+
++---------------+         +--------------+         +--------------+         +---------------+
+|               |         |              |         |              |         |               |
+|  Working Dir. |         | Staging Area |         |  Local Repo  |         |  Remote Repo  |
+|               |         |              |         |              |         |               |
++---------------+         +--------------+         +--------------+         +---------------+
+        |                         |                        |                        |
+        |       git add           |                        |                        |
+        |------------------------>|                        |                        |
+        |                         |       git commit       |                        |
+        |                         |----------------------->|                        |
+        |                         |                        |        git push        |
+        |                         |                        |----------------------->|
+        |                         |                        |                        |
+        |                         |                        |        git pull        |
+        |<--------------------------------------------------------------------------|
+
+
 --------------------------------------------------------------------------------
 1. ESTRATEGIAS DE BRANCHING (ENFOQUE EN GIT-FLOW)
 --------------------------------------------------------------------------------
@@ -10,21 +38,21 @@ lanzamientos (releases) programados. Define roles específicos para diferentes
 ramas y cuándo deben interactuar.
 
 Ramas principales:
-* master / main: Contiene el código en producción. Cada commit es un "release".
+* main / main: Contiene el código en producción. Cada commit es un "release".
 * develop: Rama de integración para características (features) en desarrollo.
 
 Ramas de apoyo:
 * feature/*: Se crean a partir de 'develop'. Sirven para desarrollar nuevas
   funcionalidades. Al terminar, se unen (merge) de vuelta a 'develop'.
 * release/*: Se crean a partir de 'develop' cuando se acerca un lanzamiento.
-  Solo admiten corrección de errores (bugs). Al finalizar, se unen a 'master'
+  Solo admiten corrección de errores (bugs). Al finalizar, se unen a 'main'
   (etiquetando la versión) y a 'develop'.
-* hotfix/*: Se crean a partir de 'master' para corregir errores críticos en
-  producción. Al terminar, se unen a 'master' y a 'develop'.
+* hotfix/*: Se crean a partir de 'main' para corregir errores críticos en
+  producción. Al terminar, se unen a 'main' y a 'develop'.
 
 Diagrama de Git-Flow en texto plano:
 
-[master]   ---(v1.0)-----------------------------------------(v1.1)--->
+[main]   ---(v1.0)-----------------------------------------(v1.1)--->
                  \                                           /   |
 [hotfix]          \                                  (fix)--/    |
                    \                                 /           |
