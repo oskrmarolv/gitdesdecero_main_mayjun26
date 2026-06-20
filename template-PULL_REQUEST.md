@@ -1,4 +1,4 @@
-# GUÍA COMPLETA PARA DEFINIR EL CONTENIDO DE UN PULL REQUEST (BUENAS PRÁCTICAS)
+# GUIA PARA ESTRUCTURAR UN BUEN PULL-REQUEST EN GIT
 
 ## 1. TÍTULO DEL PR (Claro y descriptivo)
 - Usa el formato de Conventional Commits (opcional pero muy recomendado):
