@@ -1,0 +1,114 @@
+================================================================================
+GUÍA DE CONCEPTOS CLAVE DE GIT
+================================================================================
+
+--------------------------------------------------------------------------------
+1. ESTRATEGIAS DE BRANCHING (ENFOQUE EN GIT-FLOW)
+--------------------------------------------------------------------------------
+Git-Flow es un modelo estricto de ramas diseñado para organizar el trabajo en
+lanzamientos (releases) programados. Define roles específicos para diferentes
+ramas y cuándo deben interactuar.
+
+Ramas principales:
+* master / main: Contiene el código en producción. Cada commit es un "release".
+* develop: Rama de integración para características (features) en desarrollo.
+
+Ramas de apoyo:
+* feature/*: Se crean a partir de 'develop'. Sirven para desarrollar nuevas
+  funcionalidades. Al terminar, se unen (merge) de vuelta a 'develop'.
+* release/*: Se crean a partir de 'develop' cuando se acerca un lanzamiento.
+  Solo admiten corrección de errores (bugs). Al finalizar, se unen a 'master'
+  (etiquetando la versión) y a 'develop'.
+* hotfix/*: Se crean a partir de 'master' para corregir errores críticos en
+  producción. Al terminar, se unen a 'master' y a 'develop'.
+
+Diagrama de Git-Flow en texto plano:
+
+[master]   ---(v1.0)-----------------------------------------(v1.1)--->
+                 \                                           /   |
+[hotfix]          \                                  (fix)--/    |
+                   \                                 /           |
+[release]           \                      (v1.1-rc)-------/     |
+                     \                     /                     |
+[develop]  ----------(o)-------(o)-------(o)--------------------(o)--->
+                        \      /
+[feature]                (o)-(o)
+
+
+--------------------------------------------------------------------------------
+2. TIPOS DE MERGE
+--------------------------------------------------------------------------------
+Al integrar cambios de una rama a otra, Git ofrece diferentes estrategias:
+
+* Fast-Forward (ff):
+  Ocurre cuando la rama destino no ha tenido nuevos commits desde que se creó
+  la rama origen. Git simplemente mueve el puntero de la rama destino hacia
+  adelante. No crea un "commit de merge". Mantiene una historia lineal.
+
+* Squash:
+  Toma todos los commits de la rama origen (por ejemplo, 5 commits de una
+  feature) y los comprime en un único y nuevo commit en la rama destino.
+  Ideal para mantener limpia la historia de la rama principal sin llenarla de
+  commits intermedios como "fix typo" o "wip".
+
+* Rebase:
+  Reescribe la historia del proyecto. Toma los commits de tu rama actual y los
+  "reaplica" uno por uno en la punta de otra rama. El resultado es un historial
+  completamente lineal, como si hubieras trabajado de forma secuencial.
+  *Regla de oro:* Nunca hagas rebase de ramas públicas que otros estén usando.
+
+
+--------------------------------------------------------------------------------
+3. MANEJO DE REPOSITORIOS REMOTOS (ORIGIN Y UPSTREAM)
+--------------------------------------------------------------------------------
+Un repositorio remoto es una versión de tu proyecto alojada en internet o en
+otra red (ej. GitHub, GitLab).
+
+* ¿Por qué se define "origin"?
+  "origin" no es una palabra reservada en Git, es simplemente una convención.
+  Es el nombre por defecto que Git le asigna al repositorio remoto del cual
+  clonaste el proyecto original. Es un alias para no tener que escribir la URL
+  completa todo el tiempo.
+
+* Manejo de múltiples referencias (origin vs upstream):
+  Este patrón es muy común al contribuir a proyectos Open Source (modelo Fork):
+
+  - origin: Apunta a TU copia del repositorio en tu cuenta (tu Fork). Tú tienes
+    permisos de escritura aquí.
+  - upstream: Apunta al repositorio ORIGINAL del cual hiciste el Fork. Sirve
+    solo para lectura, para mantener tu repositorio local actualizado con los
+    cambios que hacen otras personas.
+
+* Comandos útiles:
+  git remote -v                       (Ver las referencias remotas actuales)
+  git remote add upstream <URL>       (Agregar el repositorio original)
+  git fetch upstream                  (Traer los cambios del original)
+  git merge upstream/main             (Sincronizar tu rama local)
+
+
+--------------------------------------------------------------------------------
+4. TEMPLATES PERSONALIZADOS PARA COMMITS
+--------------------------------------------------------------------------------
+Un template de commit te permite definir un formato estándar pre-escrito que
+aparecerá en tu editor de texto al ejecutar `git commit` (sin la bandera -m).
+Es excelente para estandarizar los mensajes en un equipo.
+
+Paso 1: Crear el archivo de texto
+Crea un archivo oculto en tu carpeta de usuario, por ejemplo `~/.gitmessage`:
+
+  feat: [Resumen de la característica]
+
+  Descripción detallada del cambio:
+  -
+
+  Tickets relacionados: #
+
+Paso 2: Configurar Git para que lo use
+Abre tu terminal y ejecuta la siguiente configuración global:
+
+  git config --global commit.template ~/.gitmessage
+
+Paso 3: Probar
+Simplemente haz tus cambios, agrégalos con `git add`, y ejecuta `git commit`.
+Tu editor predeterminado (Vim, Nano, VS Code) se abrirá mostrando tu plantilla.
+================================================================================
